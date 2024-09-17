@@ -1,8 +1,10 @@
 package com.mindex.challenge.data;
 
+import org.springframework.data.annotation.Id;
 import java.util.List;
 
 public class Employee {
+    @Id
     private String employeeId;
     private String firstName;
     private String lastName;
@@ -59,5 +61,15 @@ public class Employee {
 
     public void setDirectReports(List<Employee> directReports) {
         this.directReports = directReports;
+    }
+
+    @Override
+    public boolean equals(Object employee){
+	if(!(employee instanceof Employee)){
+		return false;
+	}
+	Employee e = (Employee) employee;
+	//employee's UUID acts as a primary key, just compare that
+	return this.employeeId.equals(e.employeeId);
     }
 }

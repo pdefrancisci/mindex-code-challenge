@@ -45,13 +45,14 @@ public class ReportingStructureServiceImpl implements ReportingStructureService 
 		
 		if(curr.getDirectReports()!=null){
 			System.out.println("dirs="+curr.getDirectReports().get(0).getEmployeeId());
+			System.out.println("seen="+seen.size());
 			for(Employee sub : curr.getDirectReports()){
 				//we will need to do this to get their DRs
 				//When I made the given GET calls in postman, the direct report objects were all null but for the eID
 				Employee temp = employeeRepository.findByEmployeeId(sub.getEmployeeId());
 				//We can't visit someone we've already visited
 				//we also can't visit someone we've already planned to visit
-				if(!seen.contains(sub)&&!queue.contains(sub)){
+				if(!seen.contains(temp)&&!queue.contains(temp)){
 					queue.add(temp);
 				}
 			}
