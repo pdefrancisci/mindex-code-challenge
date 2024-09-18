@@ -1,7 +1,5 @@
 package com.mindex.challenge.data;
 
-import java.util.List;
-
 public class Compensation {
     private Employee employee;
     private int salary;

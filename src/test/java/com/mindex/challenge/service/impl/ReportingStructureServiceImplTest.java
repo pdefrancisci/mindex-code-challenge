@@ -2,9 +2,7 @@ package com.mindex.challenge.service.impl;
 
 import com.mindex.challenge.data.Employee;
 import com.mindex.challenge.data.ReportingStructure;
-import com.mindex.challenge.service.ReportingStructureService;
 
-import org.assertj.core.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,22 +19,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ReportingStructureServiceImplTest {
     final int EXP_NUM_REPORTS = 4;
-    final int EXP_NUM_REPORTS_CYCLE = 1;
 
     private String employeeUrl;
     private String employeeIdUrl;
 
     private String reportingStructureIdUrl;
-
-    @Autowired
-    private ReportingStructureService reportingStructureService;
 
     @LocalServerPort
     private int port;
@@ -53,6 +46,7 @@ public class ReportingStructureServiceImplTest {
 
     @Test
     public void testReportingStructure() {
+        //Create test data
         Employee lennon = new Employee();
         lennon.setFirstName("John");
         lennon.setLastName("Lennon");
@@ -93,6 +87,7 @@ public class ReportingStructureServiceImplTest {
         pete = restTemplate.postForEntity(
             employeeUrl, pete, Employee.class).getBody();
 
+        //I'm populating the direct reports with updates
         List<Employee> georgeReps = new ArrayList<Employee>();
         georgeReps.add(pete);
         george.setDirectReports(georgeReps);
@@ -106,6 +101,7 @@ public class ReportingStructureServiceImplTest {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
+        //said updates
         lennon =
             restTemplate.exchange(employeeIdUrl,
                     HttpMethod.PUT,
@@ -121,11 +117,13 @@ public class ReportingStructureServiceImplTest {
                     Employee.class,
                     george.getEmployeeId()).getBody();
 
+
+        //John should find his 3 direct reports, plus george's one
         ReportingStructure rs = restTemplate.getForEntity(reportingStructureIdUrl, ReportingStructure.class, lennon.getEmployeeId()).getBody();
         assertEquals(rs.getNumberOfReports(), EXP_NUM_REPORTS);
 
         //should not break when a cycle is introduced
-
+        //So pete, a child in the tree/graph of John, now points to him
         List<Employee> peteReps = new ArrayList<Employee>();
         peteReps.add(lennon);
         pete.setDirectReports(peteReps);

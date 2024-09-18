@@ -62,14 +62,4 @@ public class Employee {
     public void setDirectReports(List<Employee> directReports) {
         this.directReports = directReports;
     }
-
-    @Override
-    public boolean equals(Object employee){
-	if(!(employee instanceof Employee)){
-		return false;
-	}
-	Employee e = (Employee) employee;
-	//employee's UUID acts as a primary key, just compare that
-	return this.employeeId.equals(e.employeeId);
-    }
 }

@@ -2,11 +2,6 @@ package com.mindex.challenge.service.impl;
 
 import com.mindex.challenge.data.Employee;
 import com.mindex.challenge.data.Compensation;
-import com.mindex.challenge.data.ReportingStructure;
-import com.mindex.challenge.service.ReportingStructureService;
-import com.mindex.challenge.service.CompensationService;
-
-import org.assertj.core.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,32 +14,20 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
 
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CompensationServiceImplTest {
-    final int EXP_NUM_REPORTS = 4;
 
     private String employeeUrl;
     private String employeeIdUrl;
 
     private String compensationUrl;
     private String compensationIdUrl;
-
-    private String reportingStructureIdUrl;
-
-    @Autowired
-    private ReportingStructureService reportingStructureService;
-
-    @Autowired
-    private CompensationService compensationService;
 
     @LocalServerPort
     private int port;
@@ -54,7 +37,6 @@ public class CompensationServiceImplTest {
 
     @Before
     public void setup() {
-        reportingStructureIdUrl = "http://localhost:" + port + "/reportingStructure/{id}";
         employeeUrl = "http://localhost:" + port + "/employee";
         employeeIdUrl = "http://localhost:" + port + "/employee/{id}";
         compensationUrl = "http://localhost:" + port + "/compensation";
@@ -90,7 +72,7 @@ public class CompensationServiceImplTest {
         assertEmployeeEquivalence(lennon, recLennon);
         assertCompensationEquivalence(recComp,lennonComp);
 
-        //update user    
+        //let's also test that updates propogate
         lennon.setLastName("Lennon-Ono");
 
         HttpHeaders headers = new HttpHeaders();
