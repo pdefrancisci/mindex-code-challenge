@@ -27,6 +27,7 @@ The following endpoints are available to use:
     * RESPONSE: Employee
 ```
 ? running the update function in postman is breaking my subsequent READ calls. Maybe I'm missing something.
+I wound up adding @Id to employeeId in the employee pojo to fix this
 
 The Employee has a JSON schema of:
 ```json
@@ -80,11 +81,9 @@ the fully filled out ReportingStructure for the specified employeeId. The values
 not be persisted.
 
 ok, so this is a BFS. John lennon knows his direct reports, they know their direct reports, this goes on. We do this until we no longer find new employees.
--add a new endpoint that takes an input and doesn't crash
--change this endpoint to take an input and return the directreports array of that employee
--change this endpoint to implement the solution
 
-edge case: cycles. The example they give is a tree, and you'd have to be very intentional to produce something other than a tree (I think) but I don't think there's anything stopping someone from pointing paul back at john.
+edge case: cycles. The example they give is a tree, and you'd have to be very intentional to produce something other than a tree (I think) but I don't think there's anything stopping someone from pointing pete back at john.
+update I put my explored nodes in a hashSet and do a contains check before I call a node novel and put it into my queue, when I did this with the UUIDs it worked.
 
 ### Task 2
 Create a new type, Compensation. A Compensation has the following fields: employee, salary, and effectiveDate. Create 
@@ -105,6 +104,8 @@ eh lemme go understand this DAO pattern
 ok so, Spring MongoDB offers automatic implementation of interfaces like employeeRepository, that's why there's no implementation of the repo.
 well ok, so we can probably just handle this with the repo and the serviceimpl when the time comes, lets roll with this for now
 
+WHY GO WITH THE DUPLICATED DATA: WRITING LESS OFTEN THAN READING -> FEWER FOREIGN KEY LOOKUPS
+
 so I had issues where update wasn't working, so I did some digging and found using the @Id tag can help mark the field for identity
 
 TODO: compensate for update issues
@@ -116,6 +117,9 @@ so, in employeeServiceImpl, when we update an employee, get the Compensation, an
 hey! that worked immediately.
 
 t1 cycle detection in the bfs bc we're not guaranteed it's a tree
+I already wrote collection membership checks, but they're failing, probably need to override equals()
+
+ok something about using the employee objects themselves didn't work, so I pivoted to the UUIDs. but that looks like the end of it!
 
 outstanding:
 -validation for t1
